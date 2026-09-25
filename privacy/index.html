@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Politique de confidentialité de Marketflow (Money Cooker) — plateforme eBay automatisée auto-hébergée.">
+<title>Politique de confidentialité — Marketflow</title>
+<style>
+:root{--bg:#07090f;--panel:#121624;--text:#eef1f8;--muted:#8b94a9;--accent:#6d8bff;--border:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:radial-gradient(1200px 600px at 70% -10%,rgba(109,139,255,.08),transparent),var(--bg);color:var(--text);line-height:1.65}
+.wrap{max-width:860px;margin:0 auto;padding:48px 24px 96px}
+h1{font-size:28px;letter-spacing:-.02em}
+h2{font-size:18px;margin-top:36px;color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+p,li{color:#c9d0e2;font-size:15px}
+code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px}
+a{color:var(--accent)}
+.muted{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<h1>Politique de confidentialité</h1>
+<p class="muted">Dernière mise à jour : 23 septembre 2026</p>
+
+<h2>1. Responsable du traitement</h2>
+<p>Cette application (« Marketflow / Money Cooker ») est un logiciel auto-hébergé exploité par son propriétaire (ci-après « l'exploitant »). Les données sont stockées localement sur la machine de l'exploitant. Contact : l'exploitant via les coordonnées publiées sur sa boutique eBay.</p>
+
+<h2>2. Données traitées</h2>
+<ul>
+<li><b>Données d'authentification</b> : nom d'utilisateur et mot de passe haché (scrypt) des comptes utilisateurs de l'application.</li>
+<li><b>Jetons eBay OAuth</b> : jetons d'accès et de rafraîchissement, chiffrés au repos (AES-256-GCM). Aucun mot de passe eBay n'est jamais stocké.</li>
+<li><b>Données de gestion</b> : produits, annonces, concurrents, fournisseurs, prix, marges, transactions financières, alertes et journaux d'audit.</li>
+<li><b>Données de commande</b> : identifiant de commande eBay, pseudo de l'acheteur et adresse de livraison, conservées uniquement pour l'expédition de la commande.</li>
+<li><b>Journaux techniques</b> : horodatage des actions, adresses IP des sessions utilisateurs de l'application, sans secret.</li>
+</ul>
+
+<h2>3. Finalités</h2>
+<ul>
+<li>Gestion des annonces et des ventes eBay de l'exploitant (exécution du contrat avec eBay).</li>
+<li>Expédition des commandes (l'adresse de l'acheteur est utilisée uniquement pour la livraison).</li>
+<li>Comptabilité interne, suivi des marges et détection des incidents.</li>
+</ul>
+
+<h2>4. Destinataires</h2>
+<p>Les données ne sont <b>ni vendues, ni louées, ni partagées</b> à des fins commerciales. Transferts strictement nécessaires :</p>
+<ul>
+<li><b>eBay</b> : via les API officielles eBay (inventaire, commandes, expéditions), sous l'identité du vendeur.</li>
+<li><b>Fournisseurs configurés par l'exploitant</b> : uniquement le contenu nécessaire à l'expédition (nom, adresse, articles) lorsqu'une commande est approuvée manuellement.</li>
+<li><b>Modèle d'IA local (Ollama/Qwen)</b> : l'analyse par IA s'exécute <b>localement</b> sur la machine de l'exploitant ; les adresses des acheteurs et les secrets ne lui sont jamais transmis.</li>
+</ul>
+
+<h2>5. Durée de conservation</h2>
+<p>Les données de gestion sont conservées tant que l'exploitant les juge utiles à son activité (durée configurable). Les adresses de livraison sont supprimées ou anonymisées après livraison et expiration des délais de retour/litige. Les journaux d'audit sont conservés 12 mois.</p>
+
+<h2>6. Sécurité</h2>
+<ul>
+<li>Mots de passe hachés (scrypt), jetons OAuth chiffrés (AES-256-GCM), sessions signées.</li>
+<li>Contrôle d'accès par rôles (ADMIN/OPERATOR/EDITOR/VIEWER), journal d'audit immuable, protections CSRF/XSS/SQLi/SSRF.</li>
+<li>Validation humaine obligatoire pour les actions sensibles (publication, achat fournisseur, remboursement).</li>
+</ul>
+
+<h2>7. Vos droits (RGPD)</h2>
+<p>Les acheteurs eBay exercent leurs droits (accès, rectification, effacement) directement auprès d'eBay auprès duquel ils ont fourni leurs données. L'exploitant peut effacer sur demande une adresse de livraison de ses fichiers locaux : <a href="mailto:contact@ton-domaine.fr">contact@ton-domaine.fr</a>.</p>
+
+<h2>8. Cookies</h2>
+<p>Le service n'utilise aucun cookie sur cette page. L'application elle-même n'utilise qu'un cookie de session strictement nécessaire (authentification de l'exploitant) et un cookie CSRF. Aucun traceur publicitaire.</p>
+
+<h2>9. Mineurs</h2>
+<p>Le service n'est pas destiné aux mineurs de moins de 16 ans.</p>
+</div></div>
+</body>
+</html>

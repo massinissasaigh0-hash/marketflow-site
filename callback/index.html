@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connexion eBay — Marketflow</title>
+<style>
+:root{--bg:#07090f;--panel:#121624;--text:#eef1f8;--muted:#8b94a9;--accent:#6d8bff;--ok:#3ddc97;--err:#ff6b7a;--border:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;background:radial-gradient(1200px 600px at 70% -10%,rgba(109,139,255,.08),transparent),var(--bg);color:var(--text);line-height:1.65}
+.wrap{max-width:720px;margin:0 auto;padding:48px 24px 96px}
+h1{font-size:24px;letter-spacing:-.02em}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+p,li{color:#c9d0e2;font-size:15px}
+code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;word-break:break-all}
+input,button{font:inherit}
+input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);outline:none}
+input:focus{border-color:var(--accent)}
+button{margin-top:14px;padding:12px 22px;border-radius:10px;border:0;background:linear-gradient(135deg,#6d8bff,#9f6dff);color:#fff;font-weight:600;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+#status{margin-top:16px;padding:12px 16px;border-radius:10px;display:none}
+.ok{display:block!important;background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.4);color:var(--ok)}
+.err{display:block!important;background:rgba(255,107,122,.1);border:1px solid rgba(255,107,122,.4);color:var(--err)}
+.steps li{margin:8px 0}
+.muted{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<h1>Connexion eBay — étape finale</h1>
+<p id="intro" class="muted">Vérification du retour eBay…</p>
+
+<div id="manual" style="display:none">
+<ol class="steps">
+<li>Vérifiez l'adresse de votre bot local (elle doit répondre).</li>
+<li>Le code eBay reçu est pré-rempli ci-dessous : validez pour terminer.</li>
+</ol>
+<label class="muted" for="bot">URL de votre bot</label>
+<input id="bot" placeholder="http://127.0.0.1:8811" autocomplete="off">
+<label class="muted" for="code" style="display:block;margin-top:10px">Code eBay</label>
+<input id="code" placeholder="Valeur de code=..." autocomplete="off">
+<button id="go">Terminer la connexion</button>
+</div>
+
+<div id="status"></div>
+
+<p class="muted" style="margin-top:24px">
+Cette page est un simple relais : elle n'envoie votre code qu'à <b>votre propre bot</b>,
+qui seul possède les secrets OAuth. La <a href="../privacy/">politique de confidentialité</a>
+décrit le traitement des données.
+</p>
+</div></div>
+
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var code = q.get('code');
+  var denied = q.get('denial_code') || q.get('error');
+  var intro = document.getElementById('intro');
+  var manual = document.getElementById('manual');
+  var status = document.getElementById('status');
+
+  function show(cls, html) { status.className = cls; status.innerHTML = html; }
+
+  if (denied && !code) {
+    intro.textContent = 'Autorisation refusée par eBay.';
+    show('err', 'eBay a renvoyé : <code>' + denied + '</code>. Aucun jeton n\'a été créé. Vous pouvez refermer cette page.');
+    return;
+  }
+  if (!code) {
+    intro.textContent = 'Aucun code trouvé dans l\'URL. Reprenez la connexion depuis l\'application Marketflow.';
+    return;
+  }
+
+  intro.textContent = 'Code eBay reçu ✓ — finalisez ci-dessous vers votre bot.';
+  manual.style.display = 'block';
+  document.getElementById('code').value = code;
+  var botInput = document.getElementById('bot');
+  botInput.value = localStorage.getItem('marketflow_bot_url') || 'http://127.0.0.1:8811';
+  botInput.addEventListener('change', function () { localStorage.setItem('marketflow_bot_url', botInput.value.trim()); });
+
+  document.getElementById('go').addEventListener('click', function () {
+    var c = document.getElementById('code').value.trim();
+    var bot = botInput.value.trim().replace(/\/$/, '');
+    localStorage.setItem('marketflow_bot_url', bot);
+    if (!c) { show('err', 'Collez d\'abord le code.'); return; }
+    var btn = this; btn.disabled = true;
+    fetch(bot + '/api/ebay/oauth/exchange-code', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ code: c })
+    })
+    .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+    .then(function (r) {
+      if (r.ok && r.j.ok) {
+        show('ok', '✅ eBay connecté ! Les jetons sont stockés chiffrés dans votre bot. Vous pouvez refermer cette page.');
+        manual.style.display = 'none';
+      } else {
+        show('err', 'Échec de l\'échange : <code>' + ((r.j && r.j.error) || ('HTTP ' + r.ok)) + '</code>');
+        btn.disabled = false;
+      }
+    })
+    .catch(function (e) {
+      show('err', 'Impossible de joindre le bot à <code>' + bot + '</code> — vérifiez qu\'il tourne et que l\'URL est correcte (bouton Réglages → URL du bot).');
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>
