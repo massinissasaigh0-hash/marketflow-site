@@ -14,7 +14,7 @@ git init
 git add .
 git commit -m "Public site: privacy policy + OAuth callback relay"
 git branch -M main
-git remote add origin https://github.com/<TON-COMPTE>/marketflow-site.git
+git remote add origin https://github.com/massinissasaigh0-hash/marketflow-site.git
 git push -u origin main
 
 # 3. Sur GitHub : Settings → Pages → Source : "Deploy from a branch" → main / (root) → Save
@@ -23,19 +23,19 @@ git push -u origin main
 
 ## URLs obtenues (à remplacer par ton compte GitHub)
 
-- Politique de confidentialité : `https://<TON-COMPTE>.github.io/marketflow-site/privacy/`
-- Relais callback OAuth : `https://<TON-COMPTE>.github.io/marketflow-site/callback/`
+- Politique de confidentialité : `https://massinissasaigh0-hash.github.io/marketflow-site/privacy/`
+- Relais callback OAuth : `https://massinissasaigh0-hash.github.io/marketflow-site/callback/`
 
 ## À déclarer dans le portail développeur eBay (developer.ebay.com)
 
 1. **Application Settings → your key set → Auth's accepted URL (RuName)** :
-   - « Auth accepted URL » = `https://<TON-COMPTE>.github.io/marketflow-site/callback/index.html`
+   - « Auth accepted URL » = `https://massinissasaigh0-hash.github.io/marketflow-site/callback/index.html`
    - (GitHub Pages sert `index.html` automatiquement ; mettre l'URL complète est le plus sûr)
 2. **Privacy policy URL** (formulaire de l'application) :
-   - `https://<TON-COMPTE>.github.io/marketflow-site/privacy/`
+   - `https://massinissasaigh0-hash.github.io/marketflow-site/privacy/`
 3. Copie le **RuName** affiché (format `--nom-choisi--`) dans `.env` :
    - `EBAY_RUNAME=<le RuName>`
-   - `WEB_ORIGIN=https://<TON-COMPTE>.github.io` (autorisé par le CORS du bot)
+   - `WEB_ORIGIN=https://massinissasaigh0-hash.github.io` (autorisé par le CORS du bot)
    - `PUBLIC_BASE_URL` reste facultatif (utile seulement si tu exposes plus tard un vrai domaine).
 
 ## Flux OAuth complet avec ce dispositif
